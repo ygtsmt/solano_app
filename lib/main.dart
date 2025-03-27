@@ -20,8 +20,6 @@ class MyApp extends StatelessWidget {
 
 final adapter = SolanaWalletAdapter(
   const AppIdentity(),
-  // NOTE: CONNECT THE WALLET APPLICATION
-  //       TO THE SAME NETWORK.
   cluster: Cluster.devnet,
 );
 
@@ -39,6 +37,7 @@ class _BrowserScreenState extends State<BrowserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Colors.transparent,
         flexibleSpace: Container(
           decoration: const BoxDecoration(
@@ -130,22 +129,22 @@ class _BrowserScreenState extends State<BrowserScreen> {
                       size: 50, color: Colors.white),
                   SizedBox(height: 10),
                   Text(
-                    "Wallet Seçin",
+                    "Select Wallet",
                     style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
                 ],
               ),
             ),
-            _drawerItem("Phantom ile Bağlan", "https://phantom.app"),
-            _drawerItem("Solflare ile Bağlan", "https://solflare.com"),
-            _drawerItem("Sol Pay ile Bağlan", "https://solflare.com"),
+            _drawerItem("Connect with Phantom", "phantom"),
+            _drawerItem("Connect with Solflare", "solflare"),
+            _drawerItem("Connect with Sol Pay", "solpay"),
           ],
         ),
       ),
     );
   }
 
-  Widget _drawerItem(String text, String link) {
+  Widget _drawerItem(String text, String walletType) {
     return ListTile(
       title: Text(
         text,
@@ -153,14 +152,117 @@ class _BrowserScreenState extends State<BrowserScreen> {
       ),
       leading: const Icon(Icons.wallet, color: Colors.white),
       onTap: () async {
-        Navigator.pop(context); // ✅ Menü kapanıyor
-        await adapter
-            .authorize()
-            .then((result) => setState(() => _output = result.toJson()))
-            .catchError((error) => setState(() => _output = error));
+        Navigator.pop(context);
 
-        print('objectobjectobjectobjectobject :${_output}');
+        final result = await _connectToWallet(walletType);
+        if (!result) {
+          return errorShowDialog();
+        } else {
+          return successShowDialog();
+        }
       },
     );
+  }
+
+  Future<void> errorShowDialog() async {
+    return showAdaptiveDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Center(child: Text('!')),
+          content: Text(
+              'Please install a wallet application. \n (Phantom Wallet, Solflare Wallet)'),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Tamam'))
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> successShowDialog() async {
+    return showAdaptiveDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Center(child: Text('🌟')),
+          content: Text('Successfully installed.'),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Tamam'))
+          ],
+        );
+      },
+    );
+  }
+
+  Future<bool> _connectToWallet(String walletType) async {
+    try {
+      Uri? walletUriBase;
+
+      switch (walletType) {
+        case 'phantom':
+          walletUriBase = adapter.store.apps[0].walletUriBase;
+          break;
+        case 'solflare':
+          walletUriBase = adapter.store.apps[1].walletUriBase;
+          break;
+        case 'solpay':
+          walletUriBase = adapter.store.apps[1].walletUriBase;
+          break;
+      }
+      if (walletUriBase == null) {
+        return false;
+      }
+
+      final result = await adapter.authorize(
+        walletUriBase: walletUriBase,
+        type: AssociationType.local,
+      );
+      print('$walletType ile bağlandı: $result');
+      setState(() => _output = result.toJson());
+      print('objectobjectobjectobjectobject : ${_output}');
+      return true;
+    } catch (e) {
+      print("$walletType Bağlantı Hatası: $e");
+      return false;
+    }
+  }
+
+  Future<void> _connectPhantom() async {
+    try {
+      final result = await adapter.authorize();
+      print('Phantom ile bağlandı: $result');
+      setState(() => _output = result.toJson());
+    } catch (e) {
+      print("Phantom Bağlantı Hatası: $e");
+    }
+  }
+
+  Future<void> _connectSolflare() async {
+    try {
+      final result = await adapter.authorize();
+      print('Solflare ile bağlandı: $result');
+      setState(() => _output = result.toJson());
+    } catch (e) {
+      print("Solflare Bağlantı Hatası: $e");
+    }
+  }
+
+  Future<void> _connectSolPay() async {
+    try {
+      final result = await adapter.authorize();
+      print('Sol Pay ile bağlandı: $result');
+      setState(() => _output = result.toJson());
+    } catch (e) {
+      print("Sol Pay Bağlantı Hatası: $e");
+    }
   }
 }
