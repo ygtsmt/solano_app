@@ -1,0 +1,47 @@
+enum SvgEnum {
+  appIcon('app_logo'),
+  appIconWhiteBig('app_logo_white_big'),
+  navgarItem0('home'),
+  navgarItem1('user_interface_navbar_item1'),
+  navgarItem2('payment_navbar_item2'),
+  navgarItem3('useful_navbar_item0'),
+  banner('banner'),
+  category('category'),
+  headphones('headphones'),
+  phone('phone'),
+  flowerLeft('flower_left'),
+  flowerRight('flower_right'),
+  itemStar('item_star'),
+  startTherapy('start_therapy'),
+  freeAccount('free_account'),
+  selectPerson('select_a_person'),
+  plus('plus'),
+  calendar('calendar'),
+  paymentItem('payment_item'),
+  creditCardRed('credit_card_red'),
+  creditCardBlue('credit_card_blue'),
+  paymentSuccessImage('payment_success_image'),
+  arrowRight('arrow_right'),
+  activeMeeting('active_meeting'),
+  averageScore('average_score'),
+  totalClients('total_clients'),
+  totalMeeting('total_meeting'),
+  meetingRoom('meeting_room'),
+  filter('filter'),
+  psychologistStars('psychologist_stars'),
+  joinTeamPrice1('join_team_price1'),
+  joinTeamPrice2('join_team_price2'),
+  joinTeamPrice3('join_team_price3'),
+  sendMessage('send_message'),
+  askQuestionTwo('ask_question_two'),
+  askQuestionThree('ask_question_three'),
+  top1('top1'),
+  empty('empty'),
+  starEmpty('star_empty'),
+
+  checkItem('check_item');
+
+  const SvgEnum(this.value);
+  final String value;
+  String get rawValue => 'assets/svg/$value.svg';
+}

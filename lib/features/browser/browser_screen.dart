@@ -11,7 +11,7 @@ class BrowserScreen extends StatefulWidget {
     super.key,
     required this.open,
     required this.openUrl,
-    this.isExplorer,
+      this.isExplorer,
   });
 
   @override

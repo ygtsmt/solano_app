@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:solana_wallet_adapter/solana_wallet_adapter.dart';
-import 'package:solano_app/splash_screen.dart';
 
-void main() {
+import 'package:solano_app/app/init/app_init.dart';
+import 'package:solano_app/app/router/app_router.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // await _requestPermissions();
+
+  await AppInitializer.initialize();
+
   runApp(const MyApp());
 }
 
@@ -12,6 +17,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: SplashScreen());
+    return MaterialApp.router(
+      scaffoldMessengerKey: scaffoldMessengerKey,
+      debugShowCheckedModeBanner: false,
+      routeInformationProvider: AppRouter.router.routeInformationProvider,
+      routeInformationParser: AppRouter.router.routeInformationParser,
+      routerDelegate: AppRouter.router.routerDelegate,
+    );
   }
 }

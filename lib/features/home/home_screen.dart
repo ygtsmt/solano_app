@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:solana_wallet_adapter/solana_wallet_adapter.dart';
-import 'package:solano_app/browser_screen.dart';
-import 'package:solano_app/widgets/add_button.dart';
-import 'package:solano_app/widgets/custom_home_button.dart';
+import 'package:solano_app/features/browser/browser_screen.dart';
+import 'package:solano_app/app/widgets/buttons/add_button.dart';
+import 'package:solano_app/app/widgets/buttons/custom_home_button.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
